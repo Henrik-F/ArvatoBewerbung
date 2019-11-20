@@ -1,5 +1,7 @@
 package aufgabe1;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,7 +11,7 @@ import java.util.List;
 
 class Aufgabe1 {
 
-    String[] compareFiles(File list1, File list2) {
+    String compareFiles(File list1, File list2) {
         try {
             BufferedReader readList1 = new BufferedReader(new FileReader(list1));
             BufferedReader readList2 = new BufferedReader(new FileReader(list2));
@@ -46,10 +48,9 @@ class Aufgabe1 {
             }
             list2Content.removeAll(inBothLists);
             onlyInList2 = list2Content;
-            String[] output = {"'onlyInList1': " + onlyInList1.toString(), "'onlyInList2': "
-                    + onlyInList2.toString(), "'inBothLists': " + inBothLists.toString()};
 
-            return output;
+            return convertToJson(onlyInList1, onlyInList2, inBothLists);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,4 +58,24 @@ class Aufgabe1 {
         return null;
     }
 
+    private String convertToJson(List<String> onlyInList1, List<String> onlyInList2, List<String> inBothLists) {
+        ComparedWordsObj comparedWords = new ComparedWordsObj(onlyInList1.toArray(new String[0]),
+                onlyInList2.toArray(new String[0]), inBothLists.toArray(new String[0]));
+
+        Gson gson = new Gson();
+        return gson.toJson(comparedWords);
+    }
+
+}
+
+class ComparedWordsObj {
+    private String[] onlyInList1;
+    private String[] onlyInList2;
+    private String[] inBothLists;
+
+    ComparedWordsObj(String[] onlyInList1, String[] onlyInList2, String[] inBothLists){
+        this.onlyInList1 = onlyInList1;
+        this.onlyInList2 = onlyInList2;
+        this.inBothLists = inBothLists;
+    }
 }

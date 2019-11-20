@@ -5,7 +5,6 @@ import org.junit.Test;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class Aufgabe1Test {
@@ -22,10 +21,10 @@ public class Aufgabe1Test {
             e.printStackTrace();
         }
 
-        assertArrayEquals(new String[]{"'onlyInList1': []", "'onlyInList2': []", "'inBothLists': []"}, new Aufgabe1()
+        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[]}", new Aufgabe1()
                 .compareFiles(emptyList1, emptyList2));
-        emptyList1.delete();
-        emptyList2.delete();
+        emptyList1.deleteOnExit();
+        emptyList2.deleteOnExit();
     }
 
     @Test
@@ -45,10 +44,10 @@ public class Aufgabe1Test {
             e.printStackTrace();
         }
 
-        assertArrayEquals(new String[]{"'onlyInList1': [testName]", "'onlyInList2': []", "'inBothLists': []"}
-                , new Aufgabe1().compareFiles(oneWordList1, emotylist2));
-        oneWordList1.delete();
-        emotylist2.delete();
+        assertEquals("{\"onlyInList1\":[\"testName\"],\"onlyInList2\":[],\"inBothLists\":[]}",
+                new Aufgabe1().compareFiles(oneWordList1, emotylist2));
+        oneWordList1.deleteOnExit();
+        emotylist2.deleteOnExit();
     }
     @Test
     public void secondListWithOneName_comareFilesReturnsOnlyThatName() {
@@ -67,10 +66,10 @@ public class Aufgabe1Test {
             e.printStackTrace();
         }
 
-        assertArrayEquals(new String[]{"'onlyInList1': []", "'onlyInList2': [testName]", "'inBothLists': []"}
-                , new Aufgabe1().compareFiles(emptylist1, oneWordList2));
-        emptylist1.delete();
-        oneWordList2.delete();
+        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[\"testName\"],\"inBothLists\":[]}",
+                new Aufgabe1().compareFiles(emptylist1, oneWordList2));
+        emptylist1.deleteOnExit();
+        oneWordList2.deleteOnExit();
     }
 
     @Test
@@ -96,8 +95,8 @@ public class Aufgabe1Test {
             e.printStackTrace();
         }
 
-        assertArrayEquals(new String[]{"'onlyInList1': []", "'onlyInList2': []", "'inBothLists': [testName]"}
-                , new Aufgabe1().compareFiles(oneWordList1, oneWordList2));
+        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[\"testName\"]}",
+                new Aufgabe1().compareFiles(oneWordList1, oneWordList2));
         oneWordList1.deleteOnExit();
         oneWordList2.deleteOnExit();
     }
@@ -125,7 +124,7 @@ public class Aufgabe1Test {
             e.printStackTrace();
         }
 
-        assertArrayEquals(new String[]{"'onlyInList1': [testName]", "'onlyInList2': [otherName]", "'inBothLists': []"}
+        assertEquals("{\"onlyInList1\":[\"testName\"],\"onlyInList2\":[\"otherName\"],\"inBothLists\":[]}"
                 , new Aufgabe1().compareFiles(oneWordList1, otherWordList2));
         oneWordList1.deleteOnExit();
         otherWordList2.deleteOnExit();
@@ -157,8 +156,8 @@ public class Aufgabe1Test {
             e.printStackTrace();
         }
 
-        assertArrayEquals(new String[]{"'onlyInList1': [asdf]", "'onlyInList2': [otherName]", "'inBothLists': [testName]"}
-                , new Aufgabe1().compareFiles(twoWordList1, twoWordList2));
+        assertEquals("{\"onlyInList1\":[\"asdf\"],\"onlyInList2\":[\"otherName\"],\"inBothLists\":[\"testName\"]}",
+                new Aufgabe1().compareFiles(twoWordList1, twoWordList2));
         twoWordList1.deleteOnExit();
         twoWordList2.deleteOnExit();
     }
