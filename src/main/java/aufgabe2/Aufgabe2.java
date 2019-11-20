@@ -8,13 +8,13 @@ import java.util.List;
 class Aufgabe2 {
 
     String getMetaData(String jsonInput){
-        ProductData[] productDates = convertToObjects(jsonInput);
-        String mostExpensiveProduct = getMostExpensiveProduct(productDates);
-        String cheapestProduct = getCheapestProduct(productDates);
-        String mostPopularProduct = getMostPopularProduct(productDates);
-        String[] germanProducts = getGermanProducts(productDates);
-        String[] chineseProducts = getChineseProducts(productDates);
-        boolean containsFragileProducts = getContainsFragileProducts(productDates);
+        Product[] productData = convertToObjects(jsonInput);
+        String mostExpensiveProduct = getMostExpensiveProduct(productData);
+        String cheapestProduct = getCheapestProduct(productData);
+        String mostPopularProduct = getMostPopularProduct(productData);
+        String[] germanProducts = getGermanProducts(productData);
+        String[] chineseProducts = getChineseProducts(productData);
+        boolean containsFragileProducts = getContainsFragileProducts(productData);
 
         MetaData metaData = new MetaData(mostExpensiveProduct, cheapestProduct, mostPopularProduct,
                 germanProducts, chineseProducts, containsFragileProducts);
@@ -23,9 +23,9 @@ class Aufgabe2 {
         return gson.toJson(metaData);
     }
 
-    String getMostExpensiveProduct(ProductData[] productDates) {
-        ProductData mostExpensiveProduct = productDates[0];
-        for (ProductData product : productDates) {
+    String getMostExpensiveProduct(Product[] productData) {
+        Product mostExpensiveProduct = productData[0];
+        for (Product product : productData) {
             if(product.getPrice() > mostExpensiveProduct.getPrice()){
                 mostExpensiveProduct = product;
             }
@@ -33,9 +33,9 @@ class Aufgabe2 {
         return mostExpensiveProduct.getName();
     }
 
-    String getCheapestProduct(ProductData[] productDates) {
-        ProductData cheapestProduct = productDates[0];
-        for (ProductData product : productDates) {
+    String getCheapestProduct(Product[] productData) {
+        Product cheapestProduct = productData[0];
+        for (Product product : productData) {
             if(product.getPrice() < cheapestProduct.getPrice()){
                 cheapestProduct = product;
             }
@@ -43,9 +43,9 @@ class Aufgabe2 {
         return cheapestProduct.getName();
     }
 
-    String getMostPopularProduct(ProductData[] productDates) {
-        ProductData mostPopularProduct = productDates[0];
-        for (ProductData product : productDates) {
+    String getMostPopularProduct(Product[] productData) {
+        Product mostPopularProduct = productData[0];
+        for (Product product : productData) {
             if(product.getTimesPurchased() > mostPopularProduct.getTimesPurchased()){
                 mostPopularProduct = product;
             }
@@ -53,9 +53,9 @@ class Aufgabe2 {
         return mostPopularProduct.getName();
     }
 
-    String[] getGermanProducts(ProductData[] productDates) {
+    String[] getGermanProducts(Product[] productData) {
         List<String> germanProductsLlist = new ArrayList<>();
-        for (ProductData product : productDates) {
+        for (Product product : productData) {
             if(product.getCountryofOrigin().equals("DE")){
                 germanProductsLlist.add(product.getName());
             }
@@ -63,9 +63,9 @@ class Aufgabe2 {
         return germanProductsLlist.toArray(new String[0]);
     }
 
-    String[] getChineseProducts(ProductData[] productDates) {
+    String[] getChineseProducts(Product[] productData) {
         List<String> chineseProducts = new ArrayList<>();
-        for (ProductData product : productDates) {
+        for (Product product : productData) {
             if(product.getCountryofOrigin().equals("CN")){
                 chineseProducts.add(product.getName());
             }
@@ -73,8 +73,8 @@ class Aufgabe2 {
         return chineseProducts.toArray(new String[0]);
     }
 
-    boolean getContainsFragileProducts(ProductData[] productDates) {
-        for (ProductData product : productDates) {
+    boolean getContainsFragileProducts(Product[] productData) {
+        for (Product product : productData) {
             if(product.getIsFragile()){
                 return true;
             }
@@ -82,45 +82,14 @@ class Aufgabe2 {
         return false;
     }
 
-    ProductData[] convertToObjects(String jsonInput) {
+    Product[] convertToObjects(String jsonInput) {
         Gson gson = new Gson();
-        ProductData[] objArray = gson.fromJson(jsonInput, ProductData[].class);
-        return objArray;
+        return gson.fromJson(jsonInput, Product[].class);
     }
-
-    String getProductName(String jsonInput) {
-        Gson gson = new Gson();
-        ProductData obj = gson.fromJson(jsonInput, ProductData.class);
-        return obj.getName();
-    }
-
-    double getProductPrice() {
-        return 0.0;
-    }
-
-    int getTimesPurchased() {
-        return 0;
-    }
-
-    boolean isGerman() {
-/*        ProductValues thisProduct;
-        if(thisProduct.getCountryofOrigin().equals("DE")){
-            return true;
-        }*/
-        return false;
-    }
-
-    boolean isChinese() {
-        return false;
-    }
-
-    boolean getIsFragile() {
-        return false;
-    }
-
 }
 
-class ProductData {
+class Product {
+    //This unpretty class in necessary for Gson to correctly convert to JSON
     private String name;
     private String countryofOrigin;
     private double price;
@@ -147,7 +116,7 @@ class ProductData {
         return timesPurchased;
     }
 
-    @Override
+    @Override // This is only necessary for useful accessibility during testing
     public boolean equals(Object o) {
         if(this == o){
             return true;
@@ -155,16 +124,16 @@ class ProductData {
         if(o == null || getClass() != o.getClass()){
             return false;
         }
-        ProductData productData = (ProductData) o;
-        return name.equals(productData.name) &&
-                countryofOrigin.equals(productData.countryofOrigin) &&
-                price == productData.price &&
-                isFragile == productData.isFragile &&
-                timesPurchased == productData.timesPurchased;
+        Product product = (Product) o;
+        return name.equals(product.name) &&
+                countryofOrigin.equals(product.countryofOrigin) &&
+                price == product.price &&
+                isFragile == product.isFragile &&
+                timesPurchased == product.timesPurchased;
     }
 
 
-    ProductData(String name, String countryofOrigin, double price, boolean isFragile, int timesPurchased) {
+    Product(String name, String countryofOrigin, double price, boolean isFragile, int timesPurchased) {
         this.name = name;
         this.countryofOrigin = countryofOrigin;
         this.price = price;
@@ -174,12 +143,13 @@ class ProductData {
 }
 
 class MetaData{
-    String mostExpensiveProduct;
-    String cheapestProduct;
-    String mostPopularProduct;
-    String[] germanProducts;
-    String[] chineseProducts;
-    boolean containsFragileProducts;
+    //This unpretty class in necessary for Gson to correctly convert to JSON
+    private String mostExpensiveProduct;
+    private String cheapestProduct;
+    private String mostPopularProduct;
+    private String[] germanProducts;
+    private String[] chineseProducts;
+    private boolean containsFragileProducts;
 
     MetaData(String mostExpensiveProduct, String cheapestProduct, String mostPopularProduct,
             String[] germanProducts, String[] chineseProducts,
