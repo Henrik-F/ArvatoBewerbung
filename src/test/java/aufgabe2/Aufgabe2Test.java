@@ -42,14 +42,7 @@ public class Aufgabe2Test {
         ProductData obj2 = new ProductData("product1", "DE", 7.50, true,
                 20);
 
-        ProductData[] objArray = new Aufgabe2().convertToObjects(jsonInput);
-        for (ProductData obj : objArray) {
-            System.out.println(obj.getName() + "\n" + obj.getCountryofOrigin() + "\n" + obj.getPrice() + "\n"
-                    + obj.getIsFragile() + "\n" + obj.getTimesPurchased());
-        }
-        // assertArrayEquals(new ProductData[]{obj1, obj2}, new Aufgabe2().convertToObjects(jsonInput));
-        assertEquals(obj1, new Aufgabe2().convertToObjects(jsonInput)[0]);
-
+        assertArrayEquals(new ProductData[]{obj1, obj2}, new Aufgabe2().convertToObjects(jsonInput));
     }
 
 

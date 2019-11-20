@@ -7,11 +7,6 @@ class Aufgabe2 {
     ProductData[] convertToObjects(String jsonInput) {
         Gson gson = new Gson();
         ProductData[] objArray = gson.fromJson(jsonInput, ProductData[].class);
-
-        for (ProductData obj : objArray) {
-            System.out.println(obj.getName() + "\n" + obj.getCountryofOrigin() + "\n" + obj.getPrice() + "\n"
-                    + obj.getIsFragile() + "\n" + obj.getTimesPurchased());
-        }
         return objArray;
     }
 
@@ -19,7 +14,6 @@ class Aufgabe2 {
         Gson gson = new Gson();
         ProductData obj = gson.fromJson(jsonInput, ProductData.class);
         String productName = obj.getName();
-        System.out.println(productName);
         return productName;
     }
 
@@ -60,21 +54,38 @@ class ProductData {
         return name;
     }
 
-    public String getCountryofOrigin() {
+    String getCountryofOrigin() {
         return countryofOrigin;
     }
 
-    public double getPrice() {
+    double getPrice() {
         return price;
     }
 
-    public boolean getIsFragile() {
+    boolean getIsFragile() {
         return isFragile;
     }
 
-    public int getTimesPurchased() {
+    int getTimesPurchased() {
         return timesPurchased;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o){
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()){
+            return false;
+        }
+        ProductData productData = (ProductData) o;
+        return name.equals(productData.name) &&
+                countryofOrigin.equals(productData.countryofOrigin) &&
+                price == productData.price &&
+                isFragile == productData.isFragile &&
+                timesPurchased == productData.timesPurchased;
+    }
+
 
     ProductData(String name, String countryofOrigin, double price, boolean isFragile, int timesPurchased) {
         this.name = name;
