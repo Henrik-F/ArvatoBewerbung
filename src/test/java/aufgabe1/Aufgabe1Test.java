@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -160,6 +162,57 @@ public class Aufgabe1Test {
                 new Aufgabe1().compareFiles(twoWordList1, twoWordList2));
         twoWordList1.deleteOnExit();
         twoWordList2.deleteOnExit();
+    }
+    @Test
+    public void twoListsWithManySameAndDifferentNames_comareFilesReturnsSameAndDifferntNames() {
+        File fiveWordList1 = new File("FiveWordList1.txt");
+        File fiveWordList2 = new File("FiveWordList2.txt");
+
+        try {
+            fiveWordList1.createNewFile();
+            fiveWordList2.createNewFile();
+
+            Writer writeList1 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(fiveWordList1)
+                    , StandardCharsets.UTF_8)));
+            writeList1.write("testName\n");
+            writeList1.append("name1\n");
+            writeList1.append("name2\n");
+            writeList1.append("name3\n");
+            writeList1.append("name4\n");
+            writeList1.close();
+            Writer writeList2 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(fiveWordList2)
+                    , StandardCharsets.UTF_8)));
+            writeList2.write("otherName\n");
+            writeList2.append("name1\n");
+            writeList2.append("name2\n");
+            writeList2.append("name5\n");
+            writeList2.append("name6\n");
+
+            writeList2.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals("{\"onlyInList1\":[\"testName\",\"name3\",\"name4\"],\"onlyInList2\":[\"otherName\",\"name5\",\"name6\"],\"inBothLists\":[\"name1\",\"name2\"]}",
+                new Aufgabe1().compareFiles(fiveWordList1, fiveWordList2));
+        fiveWordList1.deleteOnExit();
+        fiveWordList2.deleteOnExit();
+    }
+
+    @Test
+    public void convertToJson_NoInputShouldReturnStringWithFieldNameButWithoutContent() {
+        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[]}",
+                new Aufgabe1().convertToJson(Collections.emptyList(), Collections.emptyList(), Collections.emptyList()));
+    }
+
+    @Test
+    public void convertToJson_twoInputsForEachListShouldReturnBothNamesInEachList() {
+        assertEquals("{\"onlyInList1\":[\"asdf\",\"name1\"],\"onlyInList2\":[\"otherName\",\"name2\"]," +
+                        "\"inBothLists\":[\"testName\",\"name3\"]}",
+                new Aufgabe1().convertToJson(Arrays.asList("asdf", "name1"), Arrays.asList("otherName", "name2"),
+                        Arrays.asList("testName", "name3")));
     }
 
 }

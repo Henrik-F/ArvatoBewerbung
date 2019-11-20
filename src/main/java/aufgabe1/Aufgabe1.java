@@ -58,7 +58,7 @@ class Aufgabe1 {
         return null;
     }
 
-    private String convertToJson(List<String> onlyInList1, List<String> onlyInList2, List<String> inBothLists) {
+    String convertToJson(List<String> onlyInList1, List<String> onlyInList2, List<String> inBothLists) {
         ComparedWordsObj comparedWords = new ComparedWordsObj(onlyInList1.toArray(new String[0]),
                 onlyInList2.toArray(new String[0]), inBothLists.toArray(new String[0]));
 
@@ -73,7 +73,7 @@ class ComparedWordsObj {
     private String[] onlyInList2;
     private String[] inBothLists;
 
-    ComparedWordsObj(String[] onlyInList1, String[] onlyInList2, String[] inBothLists){
+    ComparedWordsObj(String[] onlyInList1, String[] onlyInList2, String[] inBothLists) {
         this.onlyInList1 = onlyInList1;
         this.onlyInList2 = onlyInList2;
         this.inBothLists = inBothLists;
