@@ -6,209 +6,166 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class Aufgabe1Test {
+    private File list1 = new File("List1.txt");
+    private File list2 = new File("List2.txt");
+    private Writer list1Writer = new FileWriter("List1.txt");
+    private Writer list2Writer = new FileWriter("List2.txt");
 
-    @Test
-    public void twoEmptyFiles_compareFilereturnEmtpyOutputLists() {
-        File emptyList1 = new File("EmptyList1.txt");
-        File emptyList2 = new File("EmtpyList2.txt");
+    public Aufgabe1Test() throws IOException {
+    }
 
-        try {
-            emptyList1.createNewFile();
-            emptyList2.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void init() throws IOException {
+        list1.createNewFile();
+        list2.createNewFile();
+        list1Writer.write("");
+        list2Writer.write("");
+    }
 
-        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[]}", new Aufgabe1()
-                .compareFiles(emptyList1, emptyList2));
-        emptyList1.deleteOnExit();
-        emptyList2.deleteOnExit();
+    @After
+    public void tearDown() throws IOException {
+        list1Writer.close();
+        list2Writer.close();
+        list1.delete();
+        list2.delete();
     }
 
     @Test
-    public void firstListWithOneName_comareFilesReturnsOnlyThatName() {
-        File oneWordList1 = new File("OneWordList1.txt");
-        File emotylist2 = new File("EmptyList2.txt");
-
-        try {
-            oneWordList1.createNewFile();
-            emotylist2.createNewFile();
-
-            Writer writeList1 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(oneWordList1)
-                    , StandardCharsets.UTF_8)));
-            writeList1.write("testName");
-            writeList1.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("{\"onlyInList1\":[\"testName\"],\"onlyInList2\":[],\"inBothLists\":[]}",
-                new Aufgabe1().compareFiles(oneWordList1, emotylist2));
-        oneWordList1.deleteOnExit();
-        emotylist2.deleteOnExit();
-    }
-    @Test
-    public void secondListWithOneName_comareFilesReturnsOnlyThatName() {
-        File emptylist1 = new File("EmptyList1.txt");
-        File oneWordList2 = new File("OneWordList2.txt");
-
-        try {
-            emptylist1.createNewFile();
-            oneWordList2.createNewFile();
-
-            Writer writeList2 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(oneWordList2)
-                    , StandardCharsets.UTF_8)));
-            writeList2.write("testName");
-            writeList2.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[\"testName\"],\"inBothLists\":[]}",
-                new Aufgabe1().compareFiles(emptylist1, oneWordList2));
-        emptylist1.deleteOnExit();
-        oneWordList2.deleteOnExit();
+    public void getNameOfList_ReturnsListWithOneName() throws IOException {
+        list1Writer.write("name1");
+        list1Writer.close();
+        assertArrayEquals(new String[]{"name1"}, new Aufgabe1().getNamesOfList(list1).toArray());
     }
 
     @Test
-    public void twoListsWithSameName_comareFilesReturnsNameOnlyInBothLists() {
-        File oneWordList1 = new File("OneWordList1.txt");
-        File oneWordList2 = new File("OneWordList2.txt");
-
-        try {
-            oneWordList1.createNewFile();
-            oneWordList2.createNewFile();
-
-            Writer writeList1 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(oneWordList1)
-                    , StandardCharsets.UTF_8)));
-            writeList1.write("testName");
-            writeList1.close();
-            Writer writeList2 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(oneWordList2)
-                    , StandardCharsets.UTF_8)));
-            writeList2.write("testName");
-            writeList2.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[\"testName\"]}",
-                new Aufgabe1().compareFiles(oneWordList1, oneWordList2));
-        oneWordList1.deleteOnExit();
-        oneWordList2.deleteOnExit();
+    public void getNameOfList_ReturnsListWithThreeNames() throws IOException {
+        list1Writer.write("name1\n");
+        list1Writer.append("name2\n");
+        list1Writer.append("name3");
+        list1Writer.close();
+        assertArrayEquals(new String[]{"name1", "name2", "name3"}, new Aufgabe1().getNamesOfList(list1).toArray());
     }
 
     @Test
-    public void twoListsWithDifferentNames_comareFilesReturnsBothNames() {
-        File oneWordList1 = new File("OneWordList1.txt");
-        File otherWordList2 = new File("OtherWordList2.txt");
-
-        try {
-            oneWordList1.createNewFile();
-            otherWordList2.createNewFile();
-
-            Writer writeList1 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(oneWordList1)
-                    , StandardCharsets.UTF_8)));
-            writeList1.write("testName");
-            writeList1.close();
-            Writer writeList2 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(otherWordList2)
-                    , StandardCharsets.UTF_8)));
-            writeList2.write("otherName");
-            writeList2.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("{\"onlyInList1\":[\"testName\"],\"onlyInList2\":[\"otherName\"],\"inBothLists\":[]}"
-                , new Aufgabe1().compareFiles(oneWordList1, otherWordList2));
-        oneWordList1.deleteOnExit();
-        otherWordList2.deleteOnExit();
+    public void namesThatAreOnlyInFirstList_ReturnsOneName() {
+        List<String> namesOfFirstList = Arrays.asList("name1", "name2");
+        List<String> namesOfSecondList = Arrays.asList("name1");
+        assertArrayEquals(new String[]{"name2"},
+                new Aufgabe1().namesThatAreOnlyInFirstList(namesOfFirstList, namesOfSecondList).toArray());
     }
 
     @Test
-    public void twoListsWithSameAndDifferentNames_comareFilesReturnsSameAndDifferntNames() {
-        File twoWordList1 = new File("TwoWordList1.txt");
-        File twoWordList2 = new File("TwoWordList2.txt");
+    public void twoEmptyFiles_compareFileReturnsEmtpyOutputLists() throws IOException {
 
-        try {
-            twoWordList1.createNewFile();
-            twoWordList2.createNewFile();
+        String expectedJSON = "{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[]}";
 
-            Writer writeList1 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(twoWordList1)
-                    , StandardCharsets.UTF_8)));
-            writeList1.write("testName\n");
-            writeList1.append("asdf");
-            writeList1.close();
-            Writer writeList2 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(twoWordList2)
-                    , StandardCharsets.UTF_8)));
-            writeList2.write("otherName\n");
-            writeList2.append("testName");
-
-            writeList2.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("{\"onlyInList1\":[\"asdf\"],\"onlyInList2\":[\"otherName\"],\"inBothLists\":[\"testName\"]}",
-                new Aufgabe1().compareFiles(twoWordList1, twoWordList2));
-        twoWordList1.deleteOnExit();
-        twoWordList2.deleteOnExit();
-    }
-    @Test
-    public void twoListsWithManySameAndDifferentNames_comareFilesReturnsSameAndDifferntNames() {
-        File fiveWordList1 = new File("FiveWordList1.txt");
-        File fiveWordList2 = new File("FiveWordList2.txt");
-
-        try {
-            fiveWordList1.createNewFile();
-            fiveWordList2.createNewFile();
-
-            Writer writeList1 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(fiveWordList1)
-                    , StandardCharsets.UTF_8)));
-            writeList1.write("testName\n");
-            writeList1.append("name1\n");
-            writeList1.append("name2\n");
-            writeList1.append("name3\n");
-            writeList1.append("name4\n");
-            writeList1.close();
-            Writer writeList2 = new BufferedWriter((new OutputStreamWriter(new FileOutputStream(fiveWordList2)
-                    , StandardCharsets.UTF_8)));
-            writeList2.write("otherName\n");
-            writeList2.append("name1\n");
-            writeList2.append("name2\n");
-            writeList2.append("name5\n");
-            writeList2.append("name6\n");
-
-            writeList2.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("{\"onlyInList1\":[\"testName\",\"name3\",\"name4\"],\"onlyInList2\":[\"otherName\",\"name5\",\"name6\"],\"inBothLists\":[\"name1\",\"name2\"]}",
-                new Aufgabe1().compareFiles(fiveWordList1, fiveWordList2));
-        fiveWordList1.deleteOnExit();
-        fiveWordList2.deleteOnExit();
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
     }
 
     @Test
-    public void convertToJson_NoInputShouldReturnStringWithFieldNameButWithoutContent() {
+    public void firstListWithOneName_compareFilesReturnsOnlyThatName() throws IOException {
+
+        list1Writer.write("testName");
+        list1Writer.close();
+
+        String expectedJSON = "{\"onlyInList1\":[\"testName\"],\"onlyInList2\":[],\"inBothLists\":[]}";
+
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
+    }
+
+    @Test
+    public void secondListWithOneName_compareFilesReturnsOnlyThatName() throws IOException {
+
+        list2Writer.write("testName");
+        list2Writer.close();
+
+        String expectedJSON = "{\"onlyInList1\":[],\"onlyInList2\":[\"testName\"],\"inBothLists\":[]}";
+
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
+    }
+
+    @Test
+    public void twoListsWithSameName_compareFilesReturnsNameOnlyInBothLists() throws IOException {
+
+        list1Writer.write("testName");
+        list1Writer.close();
+        list2Writer.write("testName");
+        list2Writer.close();
+
+        String expectedJSON = "{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[\"testName\"]}";
+
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
+    }
+
+    @Test
+    public void twoListsWithDifferentNames_comareFilesReturnsBothNames() throws IOException {
+
+        list1Writer.write("testName");
+        list1Writer.close();
+        list2Writer.write("otherName");
+        list2Writer.close();
+
+        String expectedJSON = "{\"onlyInList1\":[\"testName\"],\"onlyInList2\":[\"otherName\"],\"inBothLists\":[]}";
+
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
+    }
+
+    @Test
+    public void twoListsWithSameAndDifferentNames_compareFilesReturnsSameAndDifferntNames() throws IOException {
+
+        list1Writer.write("testName\n");
+        list1Writer.append("asdf");
+        list1Writer.close();
+
+        list2Writer.write("otherName\n");
+        list2Writer.append("testName");
+        list2Writer.close();
+
+
+        String expectedJSON = "{\"onlyInList1\":[\"asdf\"],\"onlyInList2\":[\"otherName\"]," +
+                "\"inBothLists\":[\"testName\"]}";
+
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
+    }
+
+    @Test
+    public void twoListsWithManySameAndDifferentNames_compareFilesReturnsSameAndDifferntNames() throws IOException {
+
+        list1Writer.write("testName\n");
+        list1Writer.append("name1\n");
+        list1Writer.append("name2\n");
+        list1Writer.append("name3\n");
+        list1Writer.append("name4\n");
+        list1Writer.close();
+
+        list2Writer.write("otherName\n");
+        list2Writer.append("name1\n");
+        list2Writer.append("name2\n");
+        list2Writer.append("name5\n");
+        list2Writer.append("name6\n");
+        list2Writer.close();
+
+
+        String expectedJSON = "{\"onlyInList1\":[\"testName\",\"name3\",\"name4\"],\"onlyInList2\":[\"otherName\"," +
+                "\"name5\",\"name6\"],\"inBothLists\":[\"name1\",\"name2\"]}";
+
+        assertEquals(expectedJSON, new Aufgabe1().compareFiles(list1, list2));
+    }
+
+    @Test
+    public void convertToJson_NoInput_ShouldReturnJsonWithFieldNamesWithoutContent() {
         assertEquals("{\"onlyInList1\":[],\"onlyInList2\":[],\"inBothLists\":[]}",
                 new Aufgabe1().convertToJson(Collections.emptyList(), Collections.emptyList(), Collections.emptyList()));
     }
 
     @Test
-    public void convertToJson_twoInputsForEachListShouldReturnBothNamesInEachList() {
+    public void convertToJson_twoInputsForEachList_ShouldReturnBothNamesInEachList() {
         assertEquals("{\"onlyInList1\":[\"asdf\",\"name1\"],\"onlyInList2\":[\"otherName\",\"name2\"]," +
                         "\"inBothLists\":[\"testName\",\"name3\"]}",
                 new Aufgabe1().convertToJson(Arrays.asList("asdf", "name1"), Arrays.asList("otherName", "name2"),

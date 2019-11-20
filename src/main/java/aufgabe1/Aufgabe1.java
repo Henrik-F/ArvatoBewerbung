@@ -16,46 +16,44 @@ class Aufgabe1 {
             BufferedReader readList1 = new BufferedReader(new FileReader(list1));
             BufferedReader readList2 = new BufferedReader(new FileReader(list2));
 
-            List<String> list1Content = new ArrayList<>();
-            String currentLine = readList1.readLine();
-            while (currentLine != null) {
-                list1Content.add(currentLine);
-                currentLine = readList1.readLine();
-            }
+        List<String> namesOfList1 = getNamesOfList(list1);
+        List<String> namesOfList2 = getNamesOfList(list2);
 
-            List<String> list2Content = new ArrayList<>();
-            currentLine = readList2.readLine();
-            while (currentLine != null) {
-                list2Content.add(currentLine);
-                currentLine = readList2.readLine();
-            }
+        List<String> onlyInList1 = namesThatAreOnlyInFirstList(namesOfList1, namesOfList2);
+        List<String> onlyInList2 = namesThatAreOnlyInFirstList(namesOfList2, namesOfList1);
+        List<String> inBothLists = namesOfList1;
+        inBothLists.removeAll(onlyInList1);
 
-            List<String> onlyInList1 = new ArrayList<>();
-            List<String> onlyInList2;
-            List<String> inBothLists = new ArrayList<>();
+        return convertToJson(onlyInList1, onlyInList2, inBothLists);
+    }
 
-            for (String nameInList1 : list1Content) {
-                boolean isOnlyInList1 = true;
-                for (String nameInList2 : list2Content) {
-                    if (nameInList1.equals(nameInList2) && !inBothLists.contains(nameInList1)) {
-                        inBothLists.add(nameInList1);
-                        isOnlyInList1 = false;
-                    }
-                }
-                if (isOnlyInList1) {
-                    onlyInList1.add(nameInList1);
-                }
-            }
-            list2Content.removeAll(inBothLists);
-            onlyInList2 = list2Content;
+    List<String> getNamesOfList(File list) throws IOException {
+        BufferedReader listReader = new BufferedReader(new FileReader(list));
 
-            return convertToJson(onlyInList1, onlyInList2, inBothLists);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        List<String> namesOfList = new ArrayList<>();
+        String currentLine = listReader.readLine();
+        while (currentLine != null) {
+            namesOfList.add(currentLine);
+            currentLine = listReader.readLine();
         }
+        return namesOfList;
+    }
 
-        return null;
+    List<String> namesThatAreOnlyInFirstList(List<String> namesOfFirstList, List<String> namesOfSecondList) {
+        List<String> onlyInFirstList = new ArrayList<>();
+        for (String nameInFirstList : namesOfFirstList) {
+            boolean isOnlyInFirstList = true;
+            for (String nameInSecondList : namesOfSecondList) {
+                if (nameInFirstList.equals(nameInSecondList)) {
+                    isOnlyInFirstList = false;
+                    break;
+                }
+            }
+            if (isOnlyInFirstList) {
+                onlyInFirstList.add(nameInFirstList);
+            }
+        }
+        return onlyInFirstList;
     }
 
     String convertToJson(List<String> onlyInList1, List<String> onlyInList2, List<String> inBothLists) {
@@ -65,7 +63,6 @@ class Aufgabe1 {
         Gson gson = new Gson();
         return gson.toJson(comparedWords);
     }
-
 }
 
 class ComparedWordsObj {
