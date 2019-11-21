@@ -89,7 +89,7 @@ class Aufgabe2 {
 }
 
 class Product {
-    //This unpretty class in necessary for Gson to correctly convert to JSON
+    //This unpretty class is necessary for Gson to correctly convert to JSON
     private String name;
     private String countryofOrigin;
     private double price;

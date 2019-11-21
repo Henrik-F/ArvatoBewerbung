@@ -21,10 +21,9 @@ class Aufgabe1 {
 
         List<String> onlyInList1 = namesThatAreOnlyInFirstList(namesOfList1, namesOfList2);
         List<String> onlyInList2 = namesThatAreOnlyInFirstList(namesOfList2, namesOfList1);
-        List<String> inBothLists = namesOfList1;
-        inBothLists.removeAll(onlyInList1);
+        namesOfList1.removeAll(onlyInList1);
 
-        return convertToJson(onlyInList1, onlyInList2, inBothLists);
+        return convertToJson(onlyInList1, onlyInList2, namesOfList1);
     }
 
     List<String> getNamesOfList(File list) throws IOException {
