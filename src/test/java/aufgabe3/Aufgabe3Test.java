@@ -113,6 +113,28 @@ public class Aufgabe3Test {
     }
 
     @Test
+    public void blablaDeleteLater() {
+        Flea flea1 = new Flea("flea1", 5, 10);
+        Flea flea2 =  new Flea("flea2", 5, 9);
+        Flea flea3 = new Flea("flea3", 5, 10);
+        Flea flea4 = new Flea("flea4", 5, 10);
+
+        List<Flea> fleas = Arrays.asList(flea1, flea2, flea3, flea4);
+
+        List<Flea[]> expected = new ArrayList<>();
+        expected.add(new Flea[]{flea1, flea2, flea3});
+        expected.add(new Flea[]{flea1, flea2, flea4});
+        expected.add(new Flea[]{flea1, flea3, flea4});
+        expected.add(new Flea[]{flea2, flea3, flea4});
+
+        Aufgabe3 aufgabe3 = new Aufgabe3();
+
+        aufgabe3.combinationsNOverK(fleas, 3, 0, new Flea[3]);
+
+        assertArrayEquals(expected.toArray(), aufgabe3.nOverKCombinations.toArray());
+    }
+
+    @Test
     public void createAllPossibleCombinationsOfFleasRegardlessMoney() {
         Flea flea1 = new Flea("flea1", 5, 10);
         Flea flea2 =  new Flea("flea1", 5, 9);

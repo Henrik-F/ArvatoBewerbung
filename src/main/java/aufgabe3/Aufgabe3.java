@@ -1,11 +1,10 @@
 package aufgabe3;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Aufgabe3 {
+
+    List<Flea[]> nOverKCombinations = new ArrayList<>();
 
     /*    public static int getOptimalValue(float money, List<Flea> fleas){
             int res = 0;
@@ -85,6 +84,22 @@ public class Aufgabe3 {
         }
 
         return combinations;
+    }
+
+    void combinationsNOverK(List<Flea> fleas, int k, int start, Flea[] result) {
+        int counter = 1;
+        if (k == 0) {
+            nOverKCombinations.add(result);
+            System.out.println("Combination No.: " + counter++);
+            for (Flea flea : result) {
+                System.out.println(flea.getName());
+            }
+            return;
+        }
+        for (int i = start; i <= fleas.size()-k; i++) {
+            result[result.length-k] = fleas.get(i);
+            combinationsNOverK(fleas, k-1, i+1, result);
+        }
     }
 
     int numberOfPossibleCombinations(int numberOfFleas) {
