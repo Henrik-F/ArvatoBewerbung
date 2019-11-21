@@ -46,7 +46,9 @@ public class Flea {
         if(object == null || getClass() != object.getClass()) return false;
         if(!super.equals(object)) return false;
         Flea flea = (Flea) object;
-        return java.util.Objects.equals(name, flea.name);
+        return name.equals(flea.name)&&
+                price == flea.price&&
+                rating == flea.rating;
     }
 
     @Override
